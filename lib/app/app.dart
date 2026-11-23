@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nov2026/app/widget/navigationbar.widget.dart';
+import 'package:flutter_nov2026/app/views/contacts.screen.dart';
+// import 'package:flutter_nov2026/app/widget/navigationbar.widget.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Navigationbar()
+      home: const Contacts()
       // home: const MyHomePage(title: 'Kelas Programming'),
     );
   }
