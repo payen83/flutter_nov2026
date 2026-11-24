@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_nov2026/app/views/add_contact.screen.dart';
 import 'package:flutter_nov2026/app/views/edit_contact.screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Contacts extends StatefulWidget {
   const Contacts({super.key});
@@ -10,31 +13,59 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
-
-  final List<Map<String, String>> contacts = [
-    { 'name': 'James Wong', 'phone': '+60189987663' },
-    { 'name': 'Alice Thomas', 'phone': '+60192238383' },
-    { 'name': 'Muthusamy Vellu', 'phone': '+60145556789' },
-  ];
+  static const String _contactsKey = 'CONTACTS';
+  late SharedPreferences _prefs;
+  final List<Map<String, String>> contacts = [];
 
   String imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
+
+  @override
+  void initState(){
+    super.initState();
+    _initPrefs();
+  }
+  
+  Future<void> _initPrefs() async{
+    _prefs = await SharedPreferences.getInstance();
+    _loadContacts();
+  }
+
+  Future<void> _loadContacts() async {
+    final String? contactsJson = _prefs.getString(_contactsKey);
+    if(contactsJson != null){
+      final List<dynamic> decoded = jsonDecode(contactsJson);
+      setState(() {
+        contacts.clear();
+        contacts.addAll(decoded.map((item) => Map<String, String>.from(item)));
+      });
+    }
+  }
+
+  Future<void> _saveContacts() async {
+    final List<Map<String, dynamic>> toEncode = 
+      contacts.map((contact) => Map<String, dynamic>.from(contact)).toList();
+    await _prefs.setString(_contactsKey, jsonEncode(toEncode));
+  }
 
   void addNewContact(Map<String, String> contactData){
     setState(() {
       contacts.add(contactData);
     });
+    _saveContacts();
   }
 
   void editContact(int index, Map<String, String> contactData){
     setState(() {
       contacts[index] = contactData;
     });
+    _saveContacts();
   }
 
   void deleteContact(int index){
     setState(() {
       contacts.removeAt(index);
     });
+    _saveContacts();
   }
 
   @override

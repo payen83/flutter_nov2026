@@ -44,10 +44,35 @@ class _EditContactState extends State<EditContact> {
       'phone': _phoneController.text
     };
     widget.onEditContact(widget.contactIndex, contactData);
-    
+
     Navigator.pop(context);
   }
 
+  void _showDeleteConfirmation(){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Contact'),
+          content: Text('Are you sure you want to delete ${widget.contact['name']}?'),
+          actions: [
+            TextButton(onPressed: (){
+              Navigator.of(context).pop();
+            }, child: const Text('Cancel')),
+            TextButton(onPressed: (){
+              Navigator.of(context).pop();
+              _deleteContact();
+            }, child: const Text('Delete', style: TextStyle(color: Colors.red),)),
+          ],
+        );
+      }
+    );
+  }
+
+  void _deleteContact(){
+    widget.onDeleteContact(widget.contactIndex);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +125,20 @@ class _EditContactState extends State<EditContact> {
                 foregroundColor: Colors.white,
               ),
             ),
+            SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: _showDeleteConfirmation, 
+              label: const Text('Delete Contact'),
+              icon: Icon(Icons.delete),
+              style: OutlinedButton.styleFrom(                
+                foregroundColor: Colors.red,
+                side: const BorderSide(
+                  color: Colors.red,
+                  width: 1.0,
+                ),
+              ),
+              
+            )
           ],
         ),
       ),
