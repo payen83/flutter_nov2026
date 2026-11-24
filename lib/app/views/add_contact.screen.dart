@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
-class AddContact extends StatelessWidget {
+class AddContact extends StatefulWidget {
   final Function(Map<String, String>) onAddContact;
-  AddContact({super.key, required this.onAddContact});
+  const AddContact({super.key, required this.onAddContact});
 
+  @override
+  State<AddContact> createState() => _AddContactState();
+}
+
+class _AddContactState extends State<AddContact> {
   final _formkey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  // @override 
-  // void dispose(){
-  //   _nameController.dispose();
-  //   _phoneController.dispose();
-  //   super.dispose();
-  // }
+  @override 
+  void dispose(){
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   void _submitForm(){
     final contactData = {

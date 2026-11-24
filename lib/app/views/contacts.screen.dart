@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nov2026/app/views/add_contact.screen.dart';
+import 'package:flutter_nov2026/app/views/edit_contact.screen.dart';
 
 class Contacts extends StatefulWidget {
   const Contacts({super.key});
@@ -19,7 +20,21 @@ class _ContactsState extends State<Contacts> {
   String imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
 
   void addNewContact(Map<String, String> contactData){
+    setState(() {
+      contacts.add(contactData);
+    });
+  }
 
+  void editContact(int index, Map<String, String> contactData){
+    setState(() {
+      contacts[index] = contactData;
+    });
+  }
+
+  void deleteContact(int index){
+    setState(() {
+      contacts.removeAt(index);
+    });
   }
 
   @override
@@ -48,7 +63,21 @@ class _ContactsState extends State<Contacts> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(contact['phone']!),
-            trailing: IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+            trailing: IconButton(
+              onPressed: (){
+                Navigator.push(context, 
+                  MaterialPageRoute(
+                    builder: (context) => EditContact(
+                      contact: contact, 
+                      onEditContact: editContact, 
+                      contactIndex: index, 
+                      onDeleteContact: deleteContact
+                    )
+                  )
+                );
+              }, 
+              icon: Icon(Icons.edit)
+            ),
           );
         }
       ),
